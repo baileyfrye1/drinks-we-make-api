@@ -7,7 +7,7 @@ namespace DrinksWeMake.Api.Features.Cocktails;
 
 public static class GetAllCocktails
 {
-    public record Query(string? search, int page = 1, bool countOnly = false);
+    private sealed record Query(string? search, int page = 1, bool countOnly = false);
 
     private sealed record Response(
         int Id,
