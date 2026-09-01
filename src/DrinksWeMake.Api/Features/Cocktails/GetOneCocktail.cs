@@ -48,6 +48,6 @@ public static class GetOneCocktail
 
    public static void MapGetSingleCocktail(this IEndpointRouteBuilder app)
    {
-      app.MapGet("/v1/cocktails/{id:int}", Handle).WithName("GetCocktailById");
+      app.MapGet("/{id:int}", Handle).WithName("GetCocktailById");
    }
 }

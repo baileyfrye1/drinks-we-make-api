@@ -15,6 +15,6 @@ public static class DeleteCocktail
 
    public static void MapDeleteCocktail(this IEndpointRouteBuilder app)
    {
-      app.MapDelete("/v1/cocktails/{id:int}", Handle).WithName("DeleteCocktailById");
+      app.MapDelete("/{id:int}", Handle).WithName("DeleteCocktailById").RequireAuthorization();
    }
 }

@@ -8,15 +8,20 @@ public static class AppEndpoints
     public static IEndpointRouteBuilder MapAppEndpoints(this IEndpointRouteBuilder app)
     {
         // Cocktail Endpoints
-        app.MapGetAllCocktails();
-        app.MapGetSingleCocktail();
-        app.MapGetFeaturedCocktails();
-        app.MapCreateCocktail();
-        app.MapDeleteCocktail();
+        var cocktailEndpoints = app.MapGroup("v1/cocktails");
+        cocktailEndpoints.MapGetAllCocktails();
+        cocktailEndpoints.MapGetSingleCocktail();
+        cocktailEndpoints.MapGetFeaturedCocktails();
+        cocktailEndpoints.MapCreateCocktail();
+        cocktailEndpoints.MapDeleteCocktail();
         
         // Rating Endpoints
-        app.MapGetAllRatings();
-        app.MapDeleteRating();
+        var ratingEndpoints = app.MapGroup("v1/ratings");
+        ratingEndpoints.MapGetAllRatings();
+        ratingEndpoints.MapCreateRating();
+        ratingEndpoints.MapUpdateRating();
+        ratingEndpoints.MapDeleteRating();
+        
         return app;
     }
 }

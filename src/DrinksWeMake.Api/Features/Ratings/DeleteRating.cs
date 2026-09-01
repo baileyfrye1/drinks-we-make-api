@@ -14,6 +14,6 @@ public static class DeleteRating
 
    public static void MapDeleteRating(this IEndpointRouteBuilder app)
    {
-      app.MapDelete("/v1/ratings/{id:int}", Handle).WithName("DeleteRating");
+      app.MapDelete("/{id:int}", Handle).WithName("DeleteRating").RequireAuthorization();
    }
 }

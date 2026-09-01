@@ -46,6 +46,6 @@ public static class GetFeaturedCocktails
 
       public static void MapGetFeaturedCocktails(this IEndpointRouteBuilder app)
       {
-          app.MapGet("/v1/cocktails/featured", Handle).WithName("GetFeaturedCocktails");
+          app.MapGet("/featured", Handle).WithName("GetFeaturedCocktails");
       }
 }

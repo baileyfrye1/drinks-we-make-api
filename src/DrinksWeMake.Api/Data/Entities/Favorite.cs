@@ -11,6 +11,8 @@ public class Favorite
 		
     public string UserId { get; set; } = string.Empty;
 
+    public ApplicationUser User { get; set; } = null!;
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }

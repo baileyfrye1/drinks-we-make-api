@@ -1,8 +1,10 @@
 using System.Text.Json;
 using DrinksWeMake.Api.Data;
+using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +19,17 @@ builder.Services.AddDbContext<AppDbContext>(
             .UseSnakeCaseNamingConvention()
         );
 
+builder.Services.AddIdentityCore<ApplicationUser>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddApiEndpoints();
+
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
 {
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
 });
+
+builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -30,7 +39,19 @@ app.UseForwardedHeaders();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
+
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Prefix auth endpoints
+var authGroup = app.MapGroup("/v1/auth");
+authGroup.MapIdentityApi<ApplicationUser>();
 
 app.MapAppEndpoints();
 

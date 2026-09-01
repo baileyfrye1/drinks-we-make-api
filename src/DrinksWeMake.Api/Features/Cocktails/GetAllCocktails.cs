@@ -42,7 +42,7 @@ public static class GetAllCocktails
 
     public static void MapGetAllCocktails(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/v1/cocktails", Handle)
+        app.MapGet("/", Handle)
             .WithName("GetAllCocktails");
     }
 }

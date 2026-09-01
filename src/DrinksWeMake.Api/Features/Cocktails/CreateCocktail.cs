@@ -21,6 +21,6 @@ public static class CreateCocktail
 
     public static void MapCreateCocktail(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/v1/cocktails", Handle).WithName("CreateCocktail");
+        app.MapPost("/", Handle).WithName("CreateCocktail").RequireAuthorization();
     }
 }

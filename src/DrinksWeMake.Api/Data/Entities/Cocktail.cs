@@ -10,6 +10,8 @@ public class Cocktail
 
     public string UserId { get; set; } = string.Empty;
 
+    public ApplicationUser User { get; set; } = null!;
+
     public IEnumerable<string> Tags { get; set; } = [];
 
     public string? ImageUrl { get; set; } = string.Empty;
