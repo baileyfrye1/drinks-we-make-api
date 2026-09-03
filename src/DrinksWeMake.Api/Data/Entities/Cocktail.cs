@@ -16,7 +16,7 @@ public class Cocktail
 
     public string? ImageUrl { get; set; } = string.Empty;
 
-    public IEnumerable<string>? Steps { get; init; }
+    public IEnumerable<string>? Steps { get; init; } = [];
 
     public DateTime CreatedAt { get; init; }
 

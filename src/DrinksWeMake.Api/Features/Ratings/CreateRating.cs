@@ -18,14 +18,12 @@ public static class CreateRating
 
     private static async Task<IResult> Handle(AppDbContext dbContext, Command command, int cocktailId, CancellationToken cancellationToken)
     {
-        var currentTime = DateTime.UtcNow;
-        
         var newRating = new Rating
         {
             CocktailId = cocktailId,
             RatingValue = command.RatingValue,
-            CreatedAt = currentTime,
-            UpdatedAt = currentTime
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
         
         var added = await dbContext.Ratings.AddRatingIfNotExistsAsync(newRating, cancellationToken);

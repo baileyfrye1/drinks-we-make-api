@@ -4,32 +4,29 @@ using DrinksWeMake.Api.Data.Entities;
 
 namespace DrinksWeMake.Api.Features.Cocktails.CreateCocktail;
 
-public class CreateCocktailIngredient
+public class CreateCocktailIngredient(CreateIngredient ingredientService)
 {
-    public sealed record Command(IngredientResponse Ingredient, double Amount, string Unit);
-
-    public sealed record Response(
-        int Id,
-        int CocktailId,
-        int IngredientId,
-        double Amount,
-        string Unit,
-        DateTime CreatedAt
-    );
-
-    public Task<Response> Handle(AppDbContext dbContext, Command command, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CocktailIngredient>> Handle(AppDbContext dbContext, IEnumerable<CocktailIngredientRequest> commands, CancellationToken cancellationToken)
     {
-        var cocktailIngredient = new CocktailIngredient
+        var results = new List<CocktailIngredient>();
+
+        foreach (var cocktailIngredient in commands)
         {
-        };
-        
-        return new Response(
-            cocktailIngredient.Id,
-            cocktailIngredient.CocktailId,
-            cocktailIngredient.IngredientId,
-            cocktailIngredient.Amount,
-            cocktailIngredient.Unit,
-            cocktailIngredient.CreatedAt
-        );
+            var ingredient = await ingredientService.Handle(dbContext, cocktailIngredient.Ingredient.Name, cancellationToken);
+
+            var newCocktailIngredient = new CocktailIngredient
+            {
+                Ingredient = ingredient,
+                Amount = cocktailIngredient.Amount,
+                Unit = cocktailIngredient.Unit ?? "oz",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            dbContext.CocktailIngredients.Add(newCocktailIngredient);
+            
+            results.Add(newCocktailIngredient);
+        }
+
+        return results;
     }
 }
