@@ -1,4 +1,5 @@
 using DrinksWeMake.Api.Features.Cocktails;
+using DrinksWeMake.Api.Features.Cocktails.CreateCocktail;
 using DrinksWeMake.Api.Features.Ratings;
 
 namespace DrinksWeMake.Api.Extensions;
