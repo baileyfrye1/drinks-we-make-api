@@ -22,7 +22,7 @@ public static class UpdateCocktail
               AppDbContext dbContext,
               [FromForm] Command command,
               int cocktailId,
-              UpdateCocktailIngredient cocktailIngredientService,
+              UpdateCocktailIngredients cocktailIngredientsService,
               CancellationToken cancellationToken
        )
        {
@@ -43,8 +43,12 @@ public static class UpdateCocktail
                      cocktailTags.Add(cocktailIngredient.Ingredient.Name.ToLowerInvariant());
               }
 
-              var cocktailIngredientResponse =
-                     await cocktailIngredientService.Handle(dbContext, command.CocktailIngredients, cancellationToken);
+              var cocktailIngredientResponse = await cocktailIngredientsService.Handle(
+                            dbContext,
+                            cocktailToBeUpdated.CocktailIngredients,
+                            command.CocktailIngredients,
+                            cancellationToken
+                     );
 
               cocktailToBeUpdated.Name = command.Name;
               cocktailToBeUpdated.Featured = command.Featured;

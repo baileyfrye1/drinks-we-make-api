@@ -10,7 +10,7 @@ public static class AddDepedencies
    {
       services.AddScoped<GetOrCreateIngredient>();
       services.AddScoped<CreateCocktailIngredient>();
-      services.AddScoped<UpdateCocktailIngredient>();
+      services.AddScoped<UpdateCocktailIngredients>();
 
       return services;
    }
