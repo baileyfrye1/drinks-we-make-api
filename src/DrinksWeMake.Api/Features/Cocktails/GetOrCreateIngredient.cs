@@ -1,12 +1,10 @@
-using System.Runtime.InteropServices.JavaScript;
-using DrinksWeMake.Api.Common.Contracts;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DrinksWeMake.Api.Features.Cocktails.CreateCocktail;
+namespace DrinksWeMake.Api.Features.Cocktails;
 
-public class CreateIngredient
+public class GetOrCreateIngredient
 {
     public async Task<Ingredient> Handle(AppDbContext dbContext, string ingredientName, CancellationToken cancellationToken)
     {

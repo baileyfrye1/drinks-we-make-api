@@ -4,7 +4,7 @@ using DrinksWeMake.Api.Data.Entities;
 
 namespace DrinksWeMake.Api.Features.Cocktails.CreateCocktail;
 
-public class CreateCocktailIngredient(CreateIngredient ingredientService)
+public class CreateCocktailIngredient(GetOrCreateIngredient ingredientService)
 {
     public async Task<IEnumerable<CocktailIngredient>> Handle(AppDbContext dbContext, IEnumerable<CocktailIngredientRequest> commands, CancellationToken cancellationToken)
     {

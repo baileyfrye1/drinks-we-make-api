@@ -45,11 +45,11 @@ public static class CreateCocktail
             
         try
         {
-            var cocktailTags = (command.Tags ?? []).Select(t => t.ToLower()).ToList();
+            var cocktailTags = (command.Tags ?? []).Select(t => t.ToLowerInvariant()).ToList();
 
             foreach (var cocktailIngredient in command.CocktailIngredients)
             {
-                cocktailTags.Add(cocktailIngredient.Ingredient.Name.ToLower());
+                cocktailTags.Add(cocktailIngredient.Ingredient.Name.ToLowerInvariant());
             }
             
             var newCocktail = new Cocktail

@@ -19,7 +19,7 @@ public static class UpdateRating
     {
         var rating = await dbContext.Ratings.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
 
-        if (rating == null)
+        if (rating is null)
         {
             return Results.NotFound();
         }

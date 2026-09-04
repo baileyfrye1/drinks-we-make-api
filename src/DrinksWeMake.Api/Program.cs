@@ -2,7 +2,9 @@ using System.Text.Json;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
+using DrinksWeMake.Api.Features.Cocktails;
 using DrinksWeMake.Api.Features.Cocktails.CreateCocktail;
+using DrinksWeMake.Api.Features.Cocktails.UpdateCocktail;
 using DrinksWeMake.Api.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -43,8 +45,7 @@ builder.Services.AddHttpClient<IStorageClient, SupabaseStorageClient>(client =>
 builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<CreateIngredient>();
-builder.Services.AddScoped<CreateCocktailIngredient>();
+builder.Services.AddDependencies();
 
 var app = builder.Build();
 
