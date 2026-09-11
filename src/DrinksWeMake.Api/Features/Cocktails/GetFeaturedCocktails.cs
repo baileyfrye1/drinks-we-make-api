@@ -35,7 +35,8 @@ public static class GetFeaturedCocktails
                   c.CocktailIngredients.Select(ci => new CocktailIngredientResponse(
                       new IngredientResponse(ci.Ingredient.Name),
                       ci.Amount,
-                      ci.Unit
+                      ci.Unit,
+                      ci.Float
                   )).ToList(),
                   c.Ratings.Select(r => new RatingResponse()).ToList(),
                   c.CreatedAt,

@@ -2,6 +2,7 @@ using System.Text.Json;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
+using DrinksWeMake.Api.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -28,8 +29,20 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
 });
 
+builder.Services.AddHttpClient<IStorageClient, SupabaseStorageClient>(client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["Storage:Url"]);
+        
+        var serviceKey = builder.Configuration["Storage:Key"];
+        
+        client.DefaultRequestHeaders.Add("apiKey", serviceKey);
+    }
+);
+
 builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 builder.Services.AddAuthorization();
+
+builder.Services.AddDependencies();
 
 var app = builder.Build();
 

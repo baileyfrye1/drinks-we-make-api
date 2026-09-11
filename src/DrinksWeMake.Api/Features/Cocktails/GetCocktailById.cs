@@ -1,11 +1,10 @@
 using DrinksWeMake.Api.Common.Contracts;
 using DrinksWeMake.Api.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DrinksWeMake.Api.Features.Cocktails;
 
-public static class GetOneCocktail
+public static class GetCocktailById
 {
    private sealed record Response(
       int Id,
@@ -35,7 +34,8 @@ public static class GetOneCocktail
             c.CocktailIngredients.Select(ci => new CocktailIngredientResponse(
                new IngredientResponse(ci.Ingredient.Name),
                ci.Amount,
-               ci.Unit
+               ci.Unit,
+               ci.Float
             )).ToList(),
             c.Ratings.Select(r => new RatingResponse()).ToList(),
             c.CreatedAt,

@@ -16,13 +16,13 @@ public class Cocktail
 
     public string? ImageUrl { get; set; } = string.Empty;
 
-    public IEnumerable<string>? Steps { get; init; }
+    public IEnumerable<string>? Steps { get; init; } = [];
 
     public DateTime CreatedAt { get; init; }
 
     public DateTime UpdatedAt { get; set; }
 
-    public IEnumerable<CocktailIngredient> CocktailIngredients { get; set; } = [];
+    public ICollection<CocktailIngredient> CocktailIngredients { get; set; } = [];
 
     public IEnumerable<Rating> Ratings { get; set; } = [];
 }

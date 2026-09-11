@@ -33,7 +33,7 @@ public static class GetAllCocktails
             c.Tags.ToHashSet(),
             c.ImageUrl,
             c.Steps.ToList(),
-            c.CocktailIngredients.Select(ci => new CocktailIngredientResponse(new IngredientResponse(ci.Ingredient.Name), ci.Amount, ci.Unit)).ToList(),
+            c.CocktailIngredients.Select(ci => new CocktailIngredientResponse(new IngredientResponse(ci.Ingredient.Name), ci.Amount, ci.Unit, ci.Float)).ToList(),
             c.Ratings.Select(r => new RatingResponse()).ToList(),
             c.CreatedAt,
             c.UpdatedAt

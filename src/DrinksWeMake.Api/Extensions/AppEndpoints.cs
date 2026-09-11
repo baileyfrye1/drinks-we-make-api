@@ -1,4 +1,6 @@
 using DrinksWeMake.Api.Features.Cocktails;
+using DrinksWeMake.Api.Features.Cocktails.CreateCocktail;
+using DrinksWeMake.Api.Features.Cocktails.UpdateCocktail;
 using DrinksWeMake.Api.Features.Ratings;
 
 namespace DrinksWeMake.Api.Extensions;
@@ -13,6 +15,7 @@ public static class AppEndpoints
         cocktailEndpoints.MapGetSingleCocktail();
         cocktailEndpoints.MapGetFeaturedCocktails();
         cocktailEndpoints.MapCreateCocktail();
+        cocktailEndpoints.MapUpdateCocktail();
         cocktailEndpoints.MapDeleteCocktail();
         
         // Rating Endpoints
