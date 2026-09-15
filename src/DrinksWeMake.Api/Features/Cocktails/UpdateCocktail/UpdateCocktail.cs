@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DrinksWeMake.Api.Common.Contracts;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
@@ -31,6 +32,7 @@ public static class UpdateCocktail
            );
 
        private static async Task<IResult> Handle(
+              ClaimsPrincipal user,
               AppDbContext dbContext,
               [FromForm] Command command,
               int cocktailId,
@@ -38,10 +40,12 @@ public static class UpdateCocktail
               CancellationToken cancellationToken
        )
        {
+              var userId = user.GetUserId();
+              
               var cocktailToBeUpdated = await dbContext.Cocktails
                      .Include(c => c.CocktailIngredients)
                      .ThenInclude(ci => ci.Ingredient).Include(cocktail => cocktail.Ratings)
-                     .FirstOrDefaultAsync(c => c.Id == cocktailId, cancellationToken);
+                     .FirstOrDefaultAsync(c => c.Id == cocktailId && c.UserId == userId, cancellationToken);
 
               if (cocktailToBeUpdated is null)
               {

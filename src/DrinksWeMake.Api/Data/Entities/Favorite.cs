@@ -1,11 +1,11 @@
 namespace DrinksWeMake.Api.Data.Entities;
 
-public class Favorite
+public class Favorite : IUserCocktailEntity
 {
     
     public int Id { get; init; }
 
-    public required Cocktail Cocktail { get; set; }
+    public Cocktail Cocktail { get; set; } = null!;
 
     public int CocktailId { get; set; }
 		
@@ -14,6 +14,4 @@ public class Favorite
     public ApplicationUser User { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
 }

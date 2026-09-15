@@ -1,13 +1,13 @@
 namespace DrinksWeMake.Api.Data.Entities;
 
-public class Rating
+public class Rating : IUserCocktailEntity
 {
     
     public int Id { get; init; }
 
     public Cocktail Cocktail { get; set; } = null!;
 
-    public int CocktailId { get; init; }
+    public int CocktailId { get; set; }
 
     public int RatingValue { get; set; }
 

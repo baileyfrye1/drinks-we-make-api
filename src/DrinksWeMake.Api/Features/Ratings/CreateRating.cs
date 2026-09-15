@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
+using DrinksWeMake.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DrinksWeMake.Api.Features.Ratings;
@@ -17,9 +18,9 @@ public static class CreateRating
         DateTime UpdatedAt
     );
 
-    private static async Task<IResult> Handle(HttpContext httpContext, AppDbContext dbContext, Command command, int cocktailId, CancellationToken cancellationToken)
+    private static async Task<IResult> Handle(ClaimsPrincipal user, AppDbContext dbContext, Command command, int cocktailId, CancellationToken cancellationToken)
     {
-        var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = user.GetUserId();
         
         var newRating = new Rating
         {
@@ -30,7 +31,7 @@ public static class CreateRating
             UpdatedAt = DateTime.UtcNow
         };
         
-        var added = await dbContext.Ratings.AddRatingIfNotExistsAsync(newRating, cancellationToken);
+        var added = await dbContext.Ratings.AddIfNotExistsAsync(newRating, cancellationToken);
 
         if (!added)
         {

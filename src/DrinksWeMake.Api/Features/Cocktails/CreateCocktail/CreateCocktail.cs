@@ -3,6 +3,7 @@ using System.Security.Claims;
 using DrinksWeMake.Api.Common.Contracts;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
+using DrinksWeMake.Api.Extensions;
 using DrinksWeMake.Api.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +33,7 @@ public static class CreateCocktail
     );
 
     private static async Task<IResult> Handle(
-        HttpContext httpContext,
+        ClaimsPrincipal user,
         AppDbContext dbContext,
         [FromForm] Command command,
         IStorageClient storageClient,
@@ -41,7 +42,7 @@ public static class CreateCocktail
     )
     {
         string? imageUrl = null;
-        var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = user.GetUserId();
             
         try
         {
