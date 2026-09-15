@@ -7,7 +7,7 @@ namespace DrinksWeMake.Api.Features.Cocktails;
 
 public static class GetAllCocktails
 {
-    private sealed record Query(string? search, int page = 1, bool countOnly = false);
+    private sealed record Query(string? Search, int Page = 1, bool CountOnly = false);
 
     private sealed record Response(
         int Id,
@@ -18,7 +18,7 @@ public static class GetAllCocktails
         string? ImageUrl,
         List<string>? Steps,
         List<CocktailIngredientResponse> CocktailIngredients,
-        List<RatingResponse> Ratings,
+        RatingResponse RatingSummary,
         DateTime CreatedAt,
         DateTime UpdatedAt
         );
@@ -34,7 +34,10 @@ public static class GetAllCocktails
             c.ImageUrl,
             c.Steps.ToList(),
             c.CocktailIngredients.Select(ci => new CocktailIngredientResponse(new IngredientResponse(ci.Ingredient.Name), ci.Amount, ci.Unit, ci.Float)).ToList(),
-            c.Ratings.Select(r => new RatingResponse()).ToList(),
+            new RatingResponse(
+                c.Ratings.Average(r => (double?)r.RatingValue),
+                c.Ratings.Count()
+            ),
             c.CreatedAt,
             c.UpdatedAt
             )).ToListAsync(cancellationToken);

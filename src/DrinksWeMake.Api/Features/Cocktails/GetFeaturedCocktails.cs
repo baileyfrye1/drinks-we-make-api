@@ -15,7 +15,7 @@ public static class GetFeaturedCocktails
       string? ImageUrl,
       List<string>? Steps,
       List<CocktailIngredientResponse> CocktailIngredients,
-      List<RatingResponse> Ratings,
+      RatingResponse RatingSummary,
       DateTime CreatedAt,
       DateTime UpdatedAt
       );
@@ -38,7 +38,10 @@ public static class GetFeaturedCocktails
                       ci.Unit,
                       ci.Float
                   )).ToList(),
-                  c.Ratings.Select(r => new RatingResponse()).ToList(),
+                  new RatingResponse(
+                      c.Ratings.Average(r => (double?)r.RatingValue),
+                      c.Ratings.Count()
+                  ),
                   c.CreatedAt,
                   c.UpdatedAt
               )

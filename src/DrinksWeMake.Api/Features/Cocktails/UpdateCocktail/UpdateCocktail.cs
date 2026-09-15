@@ -14,7 +14,7 @@ public static class UpdateCocktail
               public string Name { get; set; } = string.Empty;
               public bool Featured { get; set; }
               public HashSet<string> Tags { get; set; }
-              public List<CocktailIngredientRequest> CocktailIngredients { get; set; } = [];
+              public List<CocktailIngredientRequest> CocktailIngredients { get; set; }
               public IFormFile? Image { get; set; }
        }
 
@@ -25,7 +25,7 @@ public static class UpdateCocktail
                HashSet<string> Tags,
                List<string> Steps,
                List<CocktailIngredientResponse> CocktailIngredients,
-               List<Rating> Ratings,
+               RatingResponse RatingSummary,
                DateTime CreatedAt,
                DateTime UpdatedAt
            );
@@ -83,7 +83,10 @@ public static class UpdateCocktail
                             ci.Unit,
                             ci.Float
                      ))],
-                    [..cocktailToBeUpdated.Ratings],
+                     new RatingResponse(
+                            cocktailToBeUpdated.Ratings.Average(r => (double?)r.RatingValue),
+                            cocktailToBeUpdated.Ratings.Count()
+                     ),
                      cocktailToBeUpdated.CreatedAt,
                      cocktailToBeUpdated.UpdatedAt
               );

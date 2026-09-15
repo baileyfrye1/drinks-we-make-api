@@ -1,6 +1,3 @@
 namespace DrinksWeMake.Api.Common.Contracts;
 
-public class RatingResponse
-{
-    
-}
+public sealed record RatingResponse(double? AverageRating, int TotalRatings);

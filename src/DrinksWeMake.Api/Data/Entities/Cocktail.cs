@@ -24,5 +24,5 @@ public class Cocktail
 
     public ICollection<CocktailIngredient> CocktailIngredients { get; set; } = [];
 
-    public IEnumerable<Rating> Ratings { get; set; } = [];
+    public ICollection<Rating> Ratings { get; set; } = [];
 }

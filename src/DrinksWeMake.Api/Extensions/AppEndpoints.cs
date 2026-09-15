@@ -13,6 +13,7 @@ public static class AppEndpoints
         var cocktailEndpoints = app.MapGroup("v1/cocktails");
         cocktailEndpoints.MapGetAllCocktails();
         cocktailEndpoints.MapGetSingleCocktail();
+        cocktailEndpoints.MapGetRatingByCocktailId();
         cocktailEndpoints.MapGetFeaturedCocktails();
         cocktailEndpoints.MapCreateCocktail();
         cocktailEndpoints.MapUpdateCocktail();

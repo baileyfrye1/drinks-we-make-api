@@ -25,8 +25,8 @@ public static class CreateCocktail
         string UserId,
         HashSet<string> Tags,
         List<string> Steps,
+        string? ImageUrl,
         List<CocktailIngredientResponse> CocktailIngredients,
-        List<Rating> Ratings,
         DateTime CreatedAt,
         DateTime UpdatedAt
     );
@@ -81,13 +81,13 @@ public static class CreateCocktail
                newCocktail.UserId,
                [.. newCocktail.Tags],
                [.. newCocktail.Steps],
+               imageUrl,
                [.. newCocktail.CocktailIngredients.Select(ci => new CocktailIngredientResponse(
                    new IngredientResponse(ci.Ingredient.Name),
                    ci.Amount,
                    ci.Unit,
                    ci.Float
                    ))],
-               [.. newCocktail.Ratings],
                newCocktail.CreatedAt,
                newCocktail.UpdatedAt
             );

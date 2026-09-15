@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,15 @@ public static class CreateRating
         DateTime UpdatedAt
     );
 
-    private static async Task<IResult> Handle(AppDbContext dbContext, Command command, int cocktailId, CancellationToken cancellationToken)
+    private static async Task<IResult> Handle(HttpContext httpContext, AppDbContext dbContext, Command command, int cocktailId, CancellationToken cancellationToken)
     {
+        var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
         var newRating = new Rating
         {
             CocktailId = cocktailId,
             RatingValue = command.RatingValue,
+            UserId = userId,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

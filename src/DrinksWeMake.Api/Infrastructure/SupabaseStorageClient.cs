@@ -30,7 +30,7 @@ public sealed class SupabaseStorageClient(HttpClient httpClient, IConfiguration 
 
         response.EnsureSuccessStatusCode();
 
-        return $"{_publicUrl}/{_bucketName}/{fileName}"; 
+        return $"{_publicUrl}{_bucketName}/{fileName}"; 
     }
 
     public async Task<string> UpdateFileAsync(IFormFile file, string path, CancellationToken cancellationToken)
@@ -40,7 +40,7 @@ public sealed class SupabaseStorageClient(HttpClient httpClient, IConfiguration 
 
     public async Task<IResult> DeleteFileAsync(string imageUrl, CancellationToken cancellationToken)
     {
-        var prefix = $"{_publicUrl}/{_bucketName}/";
+        var prefix = $"{_publicUrl}{_bucketName}/";
 
         if (!imageUrl.StartsWith(prefix))
         {

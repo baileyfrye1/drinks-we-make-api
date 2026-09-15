@@ -18,7 +18,7 @@ public class CreateCocktailIngredient(GetOrCreateIngredient ingredientService)
             {
                 Ingredient = ingredient,
                 Amount = cocktailIngredient.Amount,
-                Unit = cocktailIngredient.Unit ?? "oz",
+                Unit = cocktailIngredient.Unit,
                 CreatedAt = DateTime.UtcNow
             };
 

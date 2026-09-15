@@ -13,7 +13,7 @@ public class CocktailIngredient
 
     public double Amount { get; set; }
 
-    public string Unit { get; set; } = string.Empty;
+    public string? Unit { get; set; } = string.Empty;
 
     public bool Float { get; set; }
 
