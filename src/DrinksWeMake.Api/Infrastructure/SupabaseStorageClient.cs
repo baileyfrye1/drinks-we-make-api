@@ -38,7 +38,7 @@ public sealed class SupabaseStorageClient(HttpClient httpClient, IConfiguration 
         throw new NotImplementedException();
     }
 
-    public async Task<IResult> DeleteFileAsync(string imageUrl, CancellationToken cancellationToken)
+    public async Task DeleteFileAsync(string imageUrl, CancellationToken cancellationToken)
     {
         var prefix = $"{_publicUrl}{_bucketName}/";
 
@@ -56,8 +56,6 @@ public sealed class SupabaseStorageClient(HttpClient httpClient, IConfiguration 
             cancellationToken);
 
         response.EnsureSuccessStatusCode();
-
-        return Results.NoContent();
     }
 }
 
@@ -65,5 +63,5 @@ public interface IStorageClient
 {
     Task<string> UploadFileAsync(IFormFile file, CancellationToken cancellationToken);
     Task<string> UpdateFileAsync(IFormFile file, string path, CancellationToken cancellationToken);
-    Task<IResult> DeleteFileAsync(string imageUrl, CancellationToken cancellationToken);
+    Task DeleteFileAsync(string imageUrl, CancellationToken cancellationToken);
 }

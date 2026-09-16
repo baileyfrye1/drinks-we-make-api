@@ -16,7 +16,7 @@ public static class GetAllRatingsByCocktailId
                 r.UserId,
                 r.CreatedAt
             )
-        ).ToListAsync(cancellationToken);
+        ).ToListAsync(cancellationToken); 
     }
 
     public static void MapGetRatingByCocktailId(this IEndpointRouteBuilder app)

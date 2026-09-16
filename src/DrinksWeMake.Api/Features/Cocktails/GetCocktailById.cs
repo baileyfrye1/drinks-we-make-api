@@ -20,7 +20,7 @@ public static class GetCocktailById
       DateTime UpdatedAt
       );
 
-   private static async Task<IResult> Handle(AppDbContext dbContext, int id, CancellationToken cancellationToken)
+   private static async Task<Response> Handle(AppDbContext dbContext, int id, CancellationToken cancellationToken)
    {
       var cocktail = await dbContext.Cocktails.Where(c => c.Id == id).Select(c => 
          new Response(
@@ -46,11 +46,19 @@ public static class GetCocktailById
          )
       ).FirstOrDefaultAsync(cancellationToken);
 
-      return cocktail is null ? Results.NotFound() : Results.Ok(cocktail);
+      if (cocktail == null)
+      {
+         throw new Exception();
+      }
+
+      return cocktail;
    }
 
    public static void MapGetSingleCocktail(this IEndpointRouteBuilder app)
    {
-      app.MapGet("/{id:int}", Handle).WithName("GetCocktailById");
+      app.MapGet("/{id:int}", async (AppDbContext dbContext, int id, CancellationToken cancellationToken) =>
+      {
+         return Results.Ok(await Handle(dbContext, id, cancellationToken));
+      }).WithName("GetCocktailById");
    }
 }

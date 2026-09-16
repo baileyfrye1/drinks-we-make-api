@@ -2,7 +2,6 @@ using System.Security.Claims;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
-using Microsoft.EntityFrameworkCore;
 
 namespace DrinksWeMake.Api.Features.Ratings;
 
