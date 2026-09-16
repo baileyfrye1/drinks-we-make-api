@@ -1,10 +1,11 @@
+using System.Security.Claims;
 using DrinksWeMake.Api.Data;
-using DrinksWeMake.Api.Data.Entities;
+using DrinksWeMake.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DrinksWeMake.Api.Features.Ratings;
 
-public static class GetAllRatings
+public static class GetAllUserRatings
 {
     private sealed record CocktailResponse(int Id, string Name, string ImageUrl);
     private sealed record Response(
@@ -17,9 +18,9 @@ public static class GetAllRatings
         DateTime UpdatedAt
     );
 
-    private static async Task<IEnumerable<Response>> Handle(AppDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task<IEnumerable<Response>> Handle(string userId, AppDbContext dbContext, CancellationToken cancellationToken)
     {
-        return await dbContext.Ratings.Select(r => new Response(
+        return await dbContext.Ratings.Where(r => r.UserId == userId).Select(r => new Response(
             r.Id,
             new CocktailResponse(
                 r.Cocktail.Id,
@@ -34,8 +35,13 @@ public static class GetAllRatings
         )).ToListAsync(cancellationToken);
     }
 
-    public static void MapGetAllRatings(this IEndpointRouteBuilder app)
+    public static void MapGetAllUserRatings(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/", Handle).WithName("GetAllRatings");
+        app.MapGet("/me", async (ClaimsPrincipal user, AppDbContext dbContext, CancellationToken cancellationToken) =>
+        {
+            var userId = user.GetUserId();
+            
+            return Results.Ok(await Handle(userId, dbContext, cancellationToken));
+        }).WithName("GetAllUserRatings").RequireAuthorization();
     }
 }

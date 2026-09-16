@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
@@ -22,19 +23,16 @@ public static class CreateFavorite
 
         if (!added)
         {
-            // Replace with custom exception when implementing global error handling
-            throw new Exception();
+            throw new ConflictException("You have already favorited this cocktail");
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new Response(
+        return new Response(
             newFavorite.CocktailId,
             newFavorite.UserId,
             newFavorite.CreatedAt
         );
-
-        return response;
     }
         
     public static void MapCreateFavorite(this IEndpointRouteBuilder app)

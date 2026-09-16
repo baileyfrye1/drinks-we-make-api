@@ -1,4 +1,5 @@
 using System.Text.Json;
+using DrinksWeMake.Api.Common.ErrorHandling;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
@@ -12,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddDbContext<AppDbContext>(
     options => 
@@ -47,6 +51,8 @@ builder.Services.AddDependencies();
 var app = builder.Build();
 
 app.UseForwardedHeaders();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

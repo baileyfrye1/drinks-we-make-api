@@ -23,7 +23,7 @@ public static class GetAllCocktails
         DateTime UpdatedAt
         );
 
-    private static async Task<IEnumerable<Response>> Handle(AppDbContext dbContext, [AsParameters] Query request, CancellationToken cancellationToken)
+    private static async Task<IEnumerable<Response>> Handle(AppDbContext dbContext, [AsParameters] Query query, CancellationToken cancellationToken)
     {
         return await dbContext.Cocktails.Select(c => new Response(
             c.Id,
@@ -45,7 +45,13 @@ public static class GetAllCocktails
 
     public static void MapGetAllCocktails(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/", Handle)
+        app.MapGet("/", async (
+                AppDbContext dbContext,
+                [AsParameters] Query query,
+                CancellationToken cancellationToken) =>
+            {
+                return Results.Ok(await Handle(dbContext, query, cancellationToken));
+            })
             .WithName("GetAllCocktails");
     }
 }

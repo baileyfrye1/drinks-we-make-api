@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Claims;
 using DrinksWeMake.Api.Common.Contracts;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
@@ -32,17 +33,16 @@ public static class CreateCocktail
         DateTime UpdatedAt
     );
 
-    private static async Task<IResult> Handle(
-        ClaimsPrincipal user,
+    private static async Task<Response> Handle(
+        string userId,
         AppDbContext dbContext,
-        [FromForm] Command command,
+        Command command,
         IStorageClient storageClient,
         CreateCocktailIngredient cocktailIngredientService,
         CancellationToken cancellationToken
     )
     {
         string? imageUrl = null;
-        var userId = user.GetUserId();
             
         try
         {
@@ -76,7 +76,7 @@ public static class CreateCocktail
             
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            var response = new Response(
+            return new Response(
                newCocktail.Name,
                newCocktail.Featured,
                newCocktail.UserId,
@@ -92,8 +92,6 @@ public static class CreateCocktail
                newCocktail.CreatedAt,
                newCocktail.UpdatedAt
             );
-
-            return Results.Created($"v1/cocktails/{newCocktail.Name}", response);
         }
         catch (Exception ex)
         {
@@ -103,12 +101,25 @@ public static class CreateCocktail
                 await storageClient.DeleteFileAsync(imageUrl, cancellationToken);
             }
 
-            return Results.InternalServerError();
+            throw;
         }
     }
 
     public static void MapCreateCocktail(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/", Handle).WithName("CreateCocktail").RequireAuthorization().DisableAntiforgery();
+        app.MapPost("/", async (
+            ClaimsPrincipal user,
+            AppDbContext dbContext,
+            [FromForm] Command command,
+            IStorageClient storageClient,
+            CreateCocktailIngredient cocktailIngredientService,
+            CancellationToken cancellationToken
+            ) =>
+        {
+            var userId = user.GetUserId();
+            var response = await Handle(userId, dbContext, command, storageClient, cocktailIngredientService, cancellationToken);
+            
+            return Results.Created($"/v1/cocktails/{response.Name}", response);
+        }).WithName("CreateCocktail").RequireAuthorization().DisableAntiforgery();
     }
 }

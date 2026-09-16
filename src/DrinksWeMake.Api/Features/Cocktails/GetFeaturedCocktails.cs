@@ -50,6 +50,9 @@ public static class GetFeaturedCocktails
 
       public static void MapGetFeaturedCocktails(this IEndpointRouteBuilder app)
       {
-          app.MapGet("/featured", Handle).WithName("GetFeaturedCocktails");
+          app.MapGet("/featured", async (AppDbContext dbContext, CancellationToken cancellationToken) =>
+          {
+              return Results.Ok(await Handle(dbContext, cancellationToken));
+          }).WithName("GetFeaturedCocktails");
       }
 }

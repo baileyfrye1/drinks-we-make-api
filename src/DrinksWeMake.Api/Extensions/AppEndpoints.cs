@@ -20,7 +20,7 @@ public static class AppEndpoints
         cocktailEndpoints.MapDeleteCocktail();
         
         var ratingEndpoints = app.MapGroup("v1/ratings");
-        ratingEndpoints.MapGetAllRatings();
+        ratingEndpoints.MapGetAllUserRatings();
         ratingEndpoints.MapCreateRating();
         ratingEndpoints.MapUpdateRating();
         ratingEndpoints.MapDeleteRating();

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using DrinksWeMake.Api.Common.Contracts;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
@@ -31,8 +32,8 @@ public static class UpdateCocktail
                DateTime UpdatedAt
            );
 
-       private static async Task<IResult> Handle(
-              ClaimsPrincipal user,
+       private static async Task<Response> Handle(
+              string userId,
               AppDbContext dbContext,
               [FromForm] Command command,
               int cocktailId,
@@ -40,8 +41,6 @@ public static class UpdateCocktail
               CancellationToken cancellationToken
        )
        {
-              var userId = user.GetUserId();
-              
               var cocktailToBeUpdated = await dbContext.Cocktails
                      .Include(c => c.CocktailIngredients)
                      .ThenInclude(ci => ci.Ingredient).Include(cocktail => cocktail.Ratings)
@@ -49,7 +48,7 @@ public static class UpdateCocktail
 
               if (cocktailToBeUpdated is null)
               {
-                     return Results.NotFound();
+                     throw new NotFoundException("Cocktail could not be found");
               }
               
               var cocktailTags = (command.Tags ?? []).Select(t => t.Clean()).ToList();
@@ -75,7 +74,7 @@ public static class UpdateCocktail
 
               await dbContext.SaveChangesAsync(cancellationToken);
 
-              var response = new Response(
+              return new Response(
                      cocktailToBeUpdated.Name,
                      cocktailToBeUpdated.Featured,
                      cocktailToBeUpdated.UserId,
@@ -94,12 +93,23 @@ public static class UpdateCocktail
                      cocktailToBeUpdated.CreatedAt,
                      cocktailToBeUpdated.UpdatedAt
               );
-              
-              return Results.Ok(response);
        }
 
        public static void MapUpdateCocktail(this IEndpointRouteBuilder app)
        {
-              app.MapPut("/{cocktailId:int}", Handle).RequireAuthorization().DisableAntiforgery();
+              app.MapPut("/{cocktailId:int}", async (
+                     ClaimsPrincipal user,
+                     AppDbContext dbContext,
+                     [FromForm] Command command,
+                     int cocktailId,
+                     UpdateCocktailIngredients cocktailIngredientsService,
+                     CancellationToken cancellationToken) =>
+              {
+                     var userId = user.GetUserId();
+                     var response = await Handle(userId, dbContext, command, cocktailId, cocktailIngredientsService,
+                            cancellationToken);
+
+                     return Results.Ok(response);
+              }).RequireAuthorization().DisableAntiforgery();
        }
 }
