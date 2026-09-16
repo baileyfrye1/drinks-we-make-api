@@ -43,6 +43,24 @@ builder.Services.AddHttpClient<IStorageClient, SupabaseStorageClient>(client =>
     }
 );
 
+const string AllowFrontendCors = "AllowFrontendCors";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: AllowFrontendCors,
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:3000", "https://barkeepers-handbook-frontend.pages.dev",
+                    "https://barkeepershandbook.com")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        }
+    );
+});
+
 builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 builder.Services.AddAuthorization();
 
@@ -53,6 +71,8 @@ var app = builder.Build();
 app.UseForwardedHeaders();
 
 app.UseExceptionHandler();
+
+app.UseCors(AllowFrontendCors);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
