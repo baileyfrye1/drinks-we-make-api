@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Claims;
 using DrinksWeMake.Api.Common.Contracts;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
@@ -100,8 +101,7 @@ public static class CreateCocktail
                 await storageClient.DeleteFileAsync(imageUrl, cancellationToken);
             }
 
-            // Error from storage upload
-            throw new Exception();
+            throw;
         }
     }
 

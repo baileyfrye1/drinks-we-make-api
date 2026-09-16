@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ public static class DeleteFavorite
         
         if (numRowsDeleted == 0)
         {
-            throw new Exception();
+            throw new NotFoundException("Favorite could not be found");
         }
     }
 

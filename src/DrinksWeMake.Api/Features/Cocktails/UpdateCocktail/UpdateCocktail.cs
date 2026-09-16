@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using DrinksWeMake.Api.Common.Contracts;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
@@ -47,7 +48,7 @@ public static class UpdateCocktail
 
               if (cocktailToBeUpdated is null)
               {
-                     throw new Exception();
+                     throw new NotFoundException("Cocktail could not be found");
               }
               
               var cocktailTags = (command.Tags ?? []).Select(t => t.Clean()).ToList();

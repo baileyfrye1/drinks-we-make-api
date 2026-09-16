@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ public static class UpdateRating
 
         if (rating == null)
         {
-            throw new Exception();
+            throw new NotFoundException("Rating could not be found");
         }
 
         rating.RatingValue = command.RatingValue;

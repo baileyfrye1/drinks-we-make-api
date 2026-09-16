@@ -1,4 +1,5 @@
 using DrinksWeMake.Api.Common.Contracts;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,7 +49,7 @@ public static class GetCocktailById
 
       if (cocktail == null)
       {
-         throw new Exception();
+         throw new NotFoundException("Cocktail could not be found");
       }
 
       return cocktail;

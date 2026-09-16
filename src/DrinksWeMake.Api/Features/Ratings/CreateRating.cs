@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Data.Entities;
 using DrinksWeMake.Api.Extensions;
@@ -32,7 +33,7 @@ public static class CreateRating
 
         if (!added)
         {
-            throw new Exception();
+            throw new ConflictException("You have already rated this cocktail");
         }
         
         await dbContext.SaveChangesAsync(cancellationToken);

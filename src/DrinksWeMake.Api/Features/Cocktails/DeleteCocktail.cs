@@ -1,5 +1,6 @@
 using System.Reflection.Metadata;
 using System.Security.Claims;
+using DrinksWeMake.Api.Common.Exceptions;
 using DrinksWeMake.Api.Data;
 using DrinksWeMake.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ public static class DeleteCocktail
 
       if (numDeleted == 0)
       {
-         throw new Exception();
+         throw new NotFoundException("Cocktail could not be found");
       }
    }
 
