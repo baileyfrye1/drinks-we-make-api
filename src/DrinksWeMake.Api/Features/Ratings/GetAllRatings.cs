@@ -36,6 +36,9 @@ public static class GetAllRatings
 
     public static void MapGetAllRatings(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/", Handle).WithName("GetAllRatings");
+        app.MapGet("/", async (AppDbContext dbContext, CancellationToken cancellationToken) =>
+        {
+            return Results.Ok(await Handle(dbContext, cancellationToken));
+        }).WithName("GetAllRatings");
     }
 }

@@ -18,10 +18,8 @@ public static class CreateRating
         DateTime UpdatedAt
     );
 
-    private static async Task<IResult> Handle(ClaimsPrincipal user, AppDbContext dbContext, Command command, int cocktailId, CancellationToken cancellationToken)
+    private static async Task<Response> Handle(string userId, AppDbContext dbContext, Command command, int cocktailId, CancellationToken cancellationToken)
     {
-        var userId = user.GetUserId();
-        
         var newRating = new Rating
         {
             CocktailId = cocktailId,
@@ -35,24 +33,33 @@ public static class CreateRating
 
         if (!added)
         {
-            return Results.Conflict("You have already rated this cocktail");
+            throw new Exception();
         }
         
         await dbContext.SaveChangesAsync(cancellationToken);
         
-        var response = new Response(
+        return new Response(
             newRating.CocktailId,
             newRating.RatingValue,
             newRating.UserId,
             newRating.CreatedAt,
             newRating.UpdatedAt
         );
-
-        return Results.Created($"/v1/ratings/{response.CocktailId}", response);
     }
 
     public static void MapCreateRating(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/{cocktailId:int}", Handle).WithName("CreateRating").RequireAuthorization();
+        app.MapPost("/{cocktailId:int}", async (
+            ClaimsPrincipal user, 
+            AppDbContext dbContext, 
+            Command command, 
+            int cocktailId, 
+            CancellationToken cancellationToken) =>
+        {
+            var userId = user.GetUserId();
+            var response = await Handle(userId, dbContext, command, cocktailId, cancellationToken);
+            
+            return Results.Created($"/v1/ratings/{response.CocktailId}", response);
+        }).WithName("CreateRating").RequireAuthorization();
     }
 }

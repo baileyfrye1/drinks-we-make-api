@@ -21,6 +21,9 @@ public static class GetAllRatingsByCocktailId
 
     public static void MapGetRatingByCocktailId(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/{cocktailId:int}/ratings", Handle);
+        app.MapGet("/{cocktailId:int}/ratings", async (AppDbContext dbContext, int cocktailId, CancellationToken cancellationToken) =>
+        {
+            return Results.Ok(await Handle(dbContext, cocktailId, cancellationToken));
+        }).WithName("GetAllRatingsByCocktailId");
     }
 }

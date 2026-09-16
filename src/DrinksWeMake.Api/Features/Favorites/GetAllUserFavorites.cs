@@ -28,6 +28,6 @@ public static class GetAllUserFavorites
         {
             var userId = user.GetUserId();
             return Results.Ok(await Handle(userId, dbContext, cancellationToken));
-        });
+        }).WithName("GetAllUserFavorites");
     }
 }

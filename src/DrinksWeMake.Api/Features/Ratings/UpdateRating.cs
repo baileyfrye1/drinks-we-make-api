@@ -17,34 +17,36 @@ public static class UpdateRating
         DateTime UpdatedAt
     );
 
-    private static async Task<IResult> Handle(ClaimsPrincipal user, AppDbContext dbContext, Command command, int id, CancellationToken cancellationToken)
+    private static async Task<Response> Handle(string userId, AppDbContext dbContext, Command command, int id, CancellationToken cancellationToken)
     {
-        var userId = user.GetUserId();
-        
         var rating = await dbContext.Ratings.FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId, cancellationToken);
 
         if (rating == null)
         {
-            return Results.NotFound();
+            throw new Exception();
         }
 
         rating.RatingValue = command.RatingValue;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new Response(
+        return new Response(
             rating.CocktailId,
             rating.RatingValue,
             rating.UserId,
             rating.CreatedAt,
             rating.UpdatedAt
         );
-
-        return Results.Ok(response);
     }
 
     public static void MapUpdateRating(this IEndpointRouteBuilder app)
     {
-        app.MapPut("/{id:int}", Handle).WithName("UpdateRating").RequireAuthorization();
+        app.MapPut("/{id:int}", async (ClaimsPrincipal user, AppDbContext dbContext, int id, Command command, CancellationToken cancellationToken) =>
+        {
+            var userId = user.GetUserId();
+            var response = await Handle(userId, dbContext, command, id, cancellationToken);
+            
+            return Results.Ok(response);
+        }).WithName("UpdateRating").RequireAuthorization();
     }
 }

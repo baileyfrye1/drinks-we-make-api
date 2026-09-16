@@ -28,13 +28,11 @@ public static class CreateFavorite
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var response = new Response(
+        return new Response(
             newFavorite.CocktailId,
             newFavorite.UserId,
             newFavorite.CreatedAt
         );
-
-        return response;
     }
         
     public static void MapCreateFavorite(this IEndpointRouteBuilder app)
