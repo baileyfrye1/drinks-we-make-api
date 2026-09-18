@@ -5,12 +5,11 @@ namespace DrinksWeMake.Tests.Database;
 
 public static class TestDbContext
 {
-    private const string ConnectionString =
-        "Host=localhost;Port=5433;Database=drinks_we_make_test;Username=test;Password=test";
-    public static AppDbContext CreateDbContext()
+    public static AppDbContext CreateDbContext(string connectionString)
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseNpgsql(ConnectionString)
+            .UseNpgsql(connectionString)
+            .UseSnakeCaseNamingConvention()
             .Options;
 
         return new AppDbContext(options);

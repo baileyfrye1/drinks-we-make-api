@@ -6,39 +6,79 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DrinksWeMake.Tests.Cocktails;
 
-[Collection("Database")]
-public class GetOrCreateIngredientTests
+public class GetOrCreateIngredientTests(DatabaseFixture dbFixture) : DatabaseTestBase(dbFixture)
 {
    private readonly GetOrCreateIngredient _getOrCreateIngredient = new();
 
    [Fact]
    public async Task CreateNewIngredient_ReturnsCreatedIngredient()
    {
-      // Arrange
-      await using var dbContext = TestDbContext.CreateDbContext();
+      // Ensure no ingredients exist 
+      (await DbContext.Ingredients.CountAsync()).Should().Be(0);
       
-      // Act
-      var result = await _getOrCreateIngredient.Handle(dbContext, "Rye Whiskey", CancellationToken.None);
-
-      // Assert
+      var result = await _getOrCreateIngredient.Handle(DbContext, "Rye Whiskey", CancellationToken.None);
+      await DbContext.SaveChangesAsync();
+      
       result.Name.Should().Be("Rye Whiskey");
       result.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-      (await dbContext.Ingredients.CountAsync()).Should().Be(1);
+
+      var persistedIngredient = await DbContext.Ingredients.AsNoTracking().SingleAsync(i => i.Id == result.Id);
+      persistedIngredient.Should().BeEquivalentTo(result);
+      
+      // Change this to be a better test
+      (await DbContext.Ingredients.CountAsync()).Should().Be(1);
    }
-   
+
    [Fact]
    public async Task FindExistingIngredient_ReturnsExistingIngredient()
    {
       // Arrange
-      await using var dbContext = TestDbContext.CreateDbContext();
       var existingIngredient = new Ingredient { Name = "Lime Juice", CreatedAt = DateTime.UtcNow };
-      dbContext.Ingredients.Add(existingIngredient);
-      await dbContext.SaveChangesAsync();
+      DbContext.Ingredients.Add(existingIngredient);
+      await DbContext.SaveChangesAsync();
+
+      // Act
+      var result = await _getOrCreateIngredient.Handle(DbContext, "Lime Juice", CancellationToken.None);
+
+      // Assert
+      result.Should().BeEquivalentTo(existingIngredient);
+   }
+
+   [Theory]
+   [InlineData("LIME JUICE")]
+   [InlineData("lImE jUiCe")]
+   [InlineData("lime juice")]
+   [InlineData("Lime Juice")]
+   [InlineData("Lime juice")]
+   [InlineData("lime Juice")]
+   public async Task FindExistingIngredientCaseInsensitive_ReturnsExistingIngredient(string searchName)
+   {
+      // Arrange
+      var existingIngredient = new Ingredient { Name = "Lime Juice", CreatedAt = DateTime.UtcNow };
+      DbContext.Ingredients.Add(existingIngredient);
+      await DbContext.SaveChangesAsync();
+
+      // Act
+      var result = await _getOrCreateIngredient.Handle(DbContext, searchName, CancellationToken.None);
+
+      // Assert
+      result.Id.Should().Be(existingIngredient.Id);
+      (await DbContext.Ingredients.CountAsync()).Should().Be(1);
+   }
+
+   [Fact]
+   public async Task AddSameIngredient_ReturnsFirstIngredient()
+   {
+      // Arrange
+      var first = await _getOrCreateIngredient.Handle(DbContext, "Lime Juice", CancellationToken.None);
+      await DbContext.SaveChangesAsync();
       
       // Act
-      var result = await _getOrCreateIngredient.Handle(dbContext, "Lime Juice", CancellationToken.None);
-      
+      var second = await _getOrCreateIngredient.Handle(DbContext, "Lime Juice", CancellationToken.None);
+      await DbContext.SaveChangesAsync();
+
       // Assert
-      result.Name.Should().Be(existingIngredient.Name);
+      second.Id.Should().Be(first.Id);
+      (await DbContext.Ingredients.CountAsync()).Should().Be(1);
    }
 }
