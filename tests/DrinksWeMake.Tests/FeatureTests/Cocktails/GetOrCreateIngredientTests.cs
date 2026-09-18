@@ -4,7 +4,7 @@ using DrinksWeMake.Tests.Database;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DrinksWeMake.Tests.Cocktails;
+namespace DrinksWeMake.Tests.FeatureTests.Cocktails;
 
 public class GetOrCreateIngredientTests(DatabaseFixture dbFixture) : DatabaseTestBase(dbFixture)
 {
