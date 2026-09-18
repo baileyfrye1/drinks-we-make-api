@@ -1,7 +1,7 @@
 using DrinksWeMake.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace DrinksWeMake.Tests;
+namespace DrinksWeMake.Tests.Database;
 
 public static class TestDbContext
 {
