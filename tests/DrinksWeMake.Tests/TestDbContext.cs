@@ -1,6 +1,5 @@
 using DrinksWeMake.Api.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace DrinksWeMake.Tests;
 

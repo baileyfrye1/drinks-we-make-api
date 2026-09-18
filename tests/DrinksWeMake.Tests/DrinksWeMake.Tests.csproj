@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Favorites\" />
     <Folder Include="Ratings\" />
   </ItemGroup>
 
