@@ -9,7 +9,7 @@ namespace DrinksWeMake.Api.Features.Cocktails;
 
 public static class DeleteCocktail
 {
-   private static async Task Handle(string userId, AppDbContext dbContext, int id, CancellationToken cancellationToken)
+   internal static async Task Handle(string userId, AppDbContext dbContext, int id, CancellationToken cancellationToken)
    {
       var numDeleted = await dbContext.Cocktails.Where(c => c.Id == id && c.UserId == userId).ExecuteDeleteAsync(cancellationToken);
 

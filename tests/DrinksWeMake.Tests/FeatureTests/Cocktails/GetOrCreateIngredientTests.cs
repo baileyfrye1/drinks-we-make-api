@@ -25,8 +25,8 @@ public class GetOrCreateIngredientTests(DatabaseFixture dbFixture) : DatabaseTes
       var persistedIngredient = await DbContext.Ingredients.AsNoTracking().SingleAsync(i => i.Id == result.Id);
       persistedIngredient.Should().BeEquivalentTo(result);
       
-      // Change this to be a better test
       (await DbContext.Ingredients.CountAsync()).Should().Be(1);
+      (await DbContext.Ingredients.Where(i => i.Name == result.Name).SingleOrDefaultAsync()).Should().BeEquivalentTo(result);
    }
 
    [Fact]

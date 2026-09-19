@@ -9,7 +9,7 @@ public abstract class DatabaseTestBase(DatabaseFixture dbFixture) : IAsyncLifeti
     protected AppDbContext DbContext { get; private set; } = null!;
     private IDbContextTransaction _transaction = null!;
 
-    public async Task InitializeAsync()
+    public virtual async Task InitializeAsync()
     {
         DbContext = TestDbContext.CreateDbContext(dbFixture.ConnectionString);
         _transaction = await DbContext.Database.BeginTransactionAsync();
